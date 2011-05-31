@@ -2,9 +2,9 @@
 /*
 Plugin Name: catWalker
 Plugin URI: http://wordpress.blogs.wesleyan.edu/plugins/catwalker/
-Description: List categories or cross-categorizations in page or 
+Description: List categories, cross-categorizations or category posts in page or 
 post contents. Let users search for the intersection of two categories. 
-Version: 0.6
+Version: 0.7
 Author: Kevin Wiliarty
 Author URI: http://kwiliarty.blogs.wesleyan.edu/
 */
@@ -394,6 +394,82 @@ EOF;
 
 //add the shortcode to call the specialized category listings
 add_shortcode( 'crosscat' , 'crosscat_func' );
+
+/**
+ *
+ * function: list the posts belonging to a category
+ * shortcode: category-posts
+ *
+ */
+
+//function to process the category-posts shortcode
+function catwalker_posts( $atts ) {
+
+	//parse the shortcode attributes
+	extract(
+		shortcode_atts(
+			array(
+				'numberposts' => -1, //default is to show all
+				'offset'      => 0,
+				'category'    => '',
+				'taxonomy'    => 'category',
+				'terms'       => '',
+				'field'       => 'term_id',
+			),
+			$atts
+		)
+	);
+
+	//set arguments for get_posts
+	$args = array(
+		'numberposts' => $numberposts,
+		'offset'      => $offset,
+		'category'    => $category,
+		'taxonomy'    => $taxonomy,
+		'terms'       => array($terms),
+		'field'       => $field
+	);
+
+	//return the contents
+
+	//create internal query
+	$internal_query = new WP_Query(
+		array(
+			'tax_query' => array(
+				'relation' => 'AND',
+				array(
+					'taxonomy' => $taxonomy,
+					'terms'    => $terms,
+					'field'    => 'term_id'
+				)
+			)
+		)
+	);
+
+	//The internal loop
+	$content = '';
+	while( $internal_query->have_posts() ) {
+		$internal_query->the_post();
+		$content .= the_title( '' , "<br />\n" , false );
+	}
+	wp_reset_postdata();
+	return $content;
+	
+//	global $post;
+//	$save_post = $post;
+//	$content = '';
+//	$category_posts = get_posts( $args );
+//	foreach( $category_posts as $post ) {
+//		$content .= $post->post_title;
+//		$content .= "<br />\n";
+//	}
+//	$post = $save_post;
+//	return $content;
+
+}
+
+//add the shortcode to call the specialized category listings
+add_shortcode( 'category-posts' , 'catwalker_posts' );
 
 /**
  *

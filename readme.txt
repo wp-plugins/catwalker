@@ -10,11 +10,12 @@ List categories or cross-categorizations in page or post contents. Let users sea
 
 == Description ==
 
-The catWalker plugin lets you do more with WordPress categories. The plugin has three main uses.
+The catWalker plugin lets you do more with WordPress categories. The plugin has these main uses.
 
 1. Generate a customizable list of categories within the contents of a page or post
 1. Create a configurable widget that will make it easy for visitors to find posts or pages at the intersection of two categories
 1. Generate a list of cross-categorizations on a page or post
+1. List the posts or pages from a given category on a page or post
 
 In addition, users can opt to use a hierarchical custom taxonomy (called "Attributes") that applies to Pages as well as Posts.
 
@@ -54,6 +55,14 @@ To show cross categorizations add an "intersector" attribute. The list of catego
 
 The listing will show the number of results for each cross categorization, and links that do not find any results are semi-transparent. 
 
+= List category posts =
+
+User the shortcode:
+
+[category-posts]
+
+to list on a page or post all the posts or pages belonging to a particular category (or other taxonomy term). 
+
 = Custom "Attributes" Taxonomy =
 
 The hierarchical custom taxonomy "Attributes" applies to Pages as well as Posts. Activated it in the "Catwalker Options" section on the "Settings > Writing" page.
@@ -84,10 +93,16 @@ No.
 
 == Upgrade Notice ==
 
+= 0.7 =
+List on a page or post all the pages or posts belonging to a particular category (or other taxonomy term).
+
 = 0.6 =
 Set the preference to use or not use the custom "Attributes" taxonomy on the Writing Settings page.
 
 == Changelog ==
+
+= 0.7 =
+List on a page or post all the pages or posts belonging to a particular category (or other taxonomy term).
 
 = 0.6 =
 Use of the custom "Attributes" taxonomy is now optional. Change the setting on the Writing Settings page. 
