@@ -81,10 +81,11 @@ if ( ( get_option('catwalker_custom_taxonomy') == "true" ) ) {
 /**
  *
  * Option: to use or not use the custom taxonomy
+ * Option: Choose a custom taxonomy
  *
  */
 
-//validation callback
+//validation callback for checkbox
 function catwalker_sanitize_checkbox( $checkbox ) {
 	if ( $checkbox != true ) {
 		$checkbox = "false";
@@ -92,16 +93,13 @@ function catwalker_sanitize_checkbox( $checkbox ) {
 	return $checkbox;
 }
 
-////register setting
-//function register_catwalker_settings() {
-//	//use the custom taxonomy: attribute?
-//	register_setting( 'catwalker-group' , 
-//		'catwalker_custom_taxonomy' , 
-//		'catwalker_sanitize_checkbox' );
-//}
-//
-////call register settings function
-//add_action( 'admin_init' , 'register_catwalker_settings' );
+//validation callback for default taxonomy dropdown
+function catwalker_sanitize_default_taxonomy( $choice ) {
+	if ($choice != 'attribute') {
+		$choice = 'category';
+	}
+	return $choice;
+}
 
 //function to generate section on writing options page
 function catwalker_options() {
@@ -121,10 +119,26 @@ function catwalker_custom_taxonomy_option() {
 EOF;
 }
 
+//function to generate dropdown for Catwalker Default Taxonomy
+function catwalker_default_taxonomy_dropdown() {
+	$attribute_selected = '';
+	$category_selected = ' selected="selected"';
+	if ( get_option('catwalker_default_taxonomy') == 'attribute' ) {
+		$attribute_selected = ' selected="selected"';
+		$category_selected = '';
+	}
+	echo <<<EOF
+<select name='catwalker_default_taxonomy'>
+<option name='category' value='category'$category_selected>Categories</option>
+<option name='attribute' value='attribute'$attribute_selected>Attributes</option>
+<select> Choose which taxonomy the CatWalker plugin will treat as a default.
+EOF;
+}
+
 //add the catwalker options to the writing preferences page
 function catwalker_menu() {
 	add_settings_section( 'catwalker-options' ,
-		'Catwalker Options' ,
+		'CatWalker Options' ,
 		'catwalker_options' ,
 		'writing'
 	);
@@ -132,9 +146,16 @@ function catwalker_menu() {
 		'Use Custom Taxonomy' ,
 		'catwalker_custom_taxonomy_option' ,
 		'writing' ,
-		'catwalker-options'
+		'catwalker-options' 
+	);
+	add_settings_field( 'catwalker-default-taxonomy' ,
+		'Choose Default Taxonomy' ,
+		'catwalker_default_taxonomy_dropdown' ,
+		'writing' ,
+		'catwalker-options' 
 	);
 	register_setting( 'writing' , 'catwalker_custom_taxonomy' , 'catwalker_sanitize_checkbox' );
+	register_setting( 'writing' , 'catwalker_default_taxonomy' , 'catwalker_sanitize_default_taxonomy' );
 }
 
 //register the options functions
@@ -263,7 +284,7 @@ function catwalker( $atts ) {
 				'depth'              => 0,
 				'current_category'   => 0,
 				'pad_counts'         => 0,
-				'taxonomy'           => 'category',
+				'taxonomy'           => get_option('catwalker_default_taxonomy'),
 				//do not allow the shortcode to set a custom walker
 				//'walker'             => 'Walker_Category'
 			),
@@ -332,7 +353,7 @@ function crosscat_func( $atts ) {
 				'exclude'      => '',
 				'include'      => '',
 				'number'       => '',
-				'taxonomy'     => 'category',
+				'taxonomy'     => get_option('catwalker_default_taxonomy'),
 				'pad_counts'   => false,
 				'intersector'  => '',
 			),
@@ -409,12 +430,10 @@ function catwalker_posts( $atts ) {
 	extract(
 		shortcode_atts(
 			array(
-				'numberposts' => -1, //default is to show all
-				'offset'      => 0,
-				'category'    => '',
-				'taxonomy'    => 'category',
-				'terms'       => '',
-				'field'       => 'term_id',
+				'field'          => 'term_id',
+				'posts_per_page' => '-1', //shows all by default
+				'taxonomy'       => get_option('catwalker_default_taxonomy'),
+				'terms'          => '',
 			),
 			$atts
 		)
@@ -422,12 +441,10 @@ function catwalker_posts( $atts ) {
 
 	//set arguments for get_posts
 	$args = array(
-		'numberposts' => $numberposts,
-		'offset'      => $offset,
-		'category'    => $category,
-		'taxonomy'    => $taxonomy,
-		'terms'       => array($terms),
-		'field'       => $field
+		'field'          => $field,
+		'posts_per_page' => $posts_per_page,
+		'taxonomy'		 => $taxonomy,
+		'terms'      	 => array($terms),
 	);
 
 	//return the contents
@@ -435,12 +452,13 @@ function catwalker_posts( $atts ) {
 	//create internal query
 	$internal_query = new WP_Query(
 		array(
+			'posts_per_page' => $posts_per_page,
 			'tax_query' => array(
-				'relation' => 'AND',
+				'relation' => 'OR',
 				array(
+					'field'    => $field,
 					'taxonomy' => $taxonomy,
 					'terms'    => $terms,
-					'field'    => 'term_id'
 				)
 			)
 		)
@@ -455,17 +473,6 @@ function catwalker_posts( $atts ) {
 	wp_reset_postdata();
 	return $content;
 	
-//	global $post;
-//	$save_post = $post;
-//	$content = '';
-//	$category_posts = get_posts( $args );
-//	foreach( $category_posts as $post ) {
-//		$content .= $post->post_title;
-//		$content .= "<br />\n";
-//	}
-//	$post = $save_post;
-//	return $content;
-
 }
 
 //add the shortcode to call the specialized category listings
@@ -517,8 +524,8 @@ class crossCategorizerWidget extends WP_Widget
 		$option_all = 'All categories';
 		$child_of1 = empty($instance['child_of1']) ? '0' : $instance['child_of1'];
 		$child_of2 = empty($instance['child_of2']) ? '0' : $instance['child_of2'];
-		$taxonomy1 = empty($instance['taxonomy1']) ? 'category' : $instance['taxonomy1'];
-		$taxonomy2 = empty($instance['taxonomy2']) ? 'category' : $instance['taxonomy2'];
+		$taxonomy1 = empty($instance['taxonomy1']) ? get_option('catwalker_default_taxonomy') : $instance['taxonomy1'];
+		$taxonomy2 = empty($instance['taxonomy2']) ? get_option('catwalker_default_taxonomy') : $instance['taxonomy2'];
 		$dropdownOneArgs = array( 
 			'id'               => 'crosscat-dd1',
 			'name'             => 'cat1',
@@ -600,10 +607,10 @@ class crossCategorizerWidget extends WP_Widget
 			'child_of1'    => '0' , 
 			'label2'       => 'Select another',
 			'child_of2'    => '0' , 
-			'taxonomy1'    => 'category',
+			'taxonomy1'    => get_option('catwalker_default_taxonomy'),
 			'cat1selected' => 'selected',
 			'att1selected' => '',
-			'taxonomy2'    => 'category',
+			'taxonomy2'    => get_option('catwalker_default_taxonomy'),
 			'cat2selected' => 'selected',
 			'att2selected' => '',
 			) 

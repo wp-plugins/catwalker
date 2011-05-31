@@ -35,6 +35,10 @@ This is only one of many attributes that you can use to customize your list. In 
 
 http://codex.wordpress.org/Template_Tags/wp_list_categories
 
+In addition, if you can set a 'taxonomy' for your listing. In general, your choices will be to use the built-in "Categories" taxonomy or the custom "Attributes" taxonomy that comes with this plugin. 
+
+Go to Settings > Writing to choose whether or not to use the custom "Attributes" taxonomy, and whether or not to make it the default for all CatWalker functions (shortcodes and the CrossCategorizer widget).
+
 = Cross Categorizer widget =
 
 The Cross Categorizer widget includes two configurable dropdown lists of categories. Choose two categories, then click "Search" to view the posts or pages that belong to both.
@@ -65,7 +69,7 @@ to list on a page or post all the posts or pages belonging to a particular categ
 
 = Custom "Attributes" Taxonomy =
 
-The hierarchical custom taxonomy "Attributes" applies to Pages as well as Posts. Activated it in the "Catwalker Options" section on the "Settings > Writing" page.
+The hierarchical custom taxonomy "Attributes" applies to Pages as well as Posts. Activated it in the "Catwalker Options" section on the "Settings > Writing" page, where you can also opt to make "Attributes" the default taxonomy for CatWalker functions.
 
 == Installation ==
 
@@ -94,7 +98,7 @@ No.
 == Upgrade Notice ==
 
 = 0.7 =
-List on a page or post all the pages or posts belonging to a particular category (or other taxonomy term).
+List on a page or post all the pages or posts belonging to a particular category (or other taxonomy term). Set your taxonomy preference as a site-wide option.
 
 = 0.6 =
 Set the preference to use or not use the custom "Attributes" taxonomy on the Writing Settings page.
@@ -102,7 +106,8 @@ Set the preference to use or not use the custom "Attributes" taxonomy on the Wri
 == Changelog ==
 
 = 0.7 =
-List on a page or post all the pages or posts belonging to a particular category (or other taxonomy term).
+1. List on a page or post all the pages or posts belonging to a particular category (or other taxonomy term).
+1. Set a default taxonomy preference for CatWalker shortcodes and widgets on the "Settings > Writing" page.
 
 = 0.6 =
 Use of the custom "Attributes" taxonomy is now optional. Change the setting on the Writing Settings page. 
