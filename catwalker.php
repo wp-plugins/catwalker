@@ -431,48 +431,50 @@ function catwalker_posts( $atts ) {
 		shortcode_atts(
 			array(
 				'field'          => 'term_id',
+				'order'          => 'ASC',
+				'orderby'        => 'title',
 				'posts_per_page' => '-1', //shows all by default
 				'taxonomy'       => get_option('catwalker_default_taxonomy'),
-				'terms'          => '',
+				'terms'          => '', //will find union of multiple
 			),
 			$atts
 		)
 	);
 
-	//set arguments for get_posts
-	$args = array(
-		'field'          => $field,
-		'posts_per_page' => $posts_per_page,
-		'taxonomy'		 => $taxonomy,
-		'terms'      	 => array($terms),
-	);
-
 	//return the contents
-
 	//create internal query
 	$internal_query = new WP_Query(
 		array(
+			'order'          => $order,
+			'orderby'        => $orderby,
 			'posts_per_page' => $posts_per_page,
 			'tax_query' => array(
-				'relation' => 'OR',
 				array(
 					'field'    => $field,
 					'taxonomy' => $taxonomy,
-					'terms'    => $terms,
+					'terms'    => array($terms),
 				)
 			)
 		)
 	);
 
 	//The internal loop
+	//get the ID for the current post
+	global $post;
+	$global_postID = $post->ID;
 	$content = '';
 	while( $internal_query->have_posts() ) {
 		$internal_query->the_post();
-		$content .= the_title( '' , "<br />\n" , false );
+		$postID = $internal_query->post->ID;
+		//skip the current global post
+		if ( $postID == $global_postID ) { continue; }
+		//create the link
+		$post_title = $internal_query->post->post_title;
+		$post_permalink = get_permalink($postID);
+		$content .= "<a href='$post_permalink'>$post_title</a><br />\n";
 	}
 	wp_reset_postdata();
 	return $content;
-	
 }
 
 //add the shortcode to call the specialized category listings
