@@ -94,6 +94,7 @@ No.
 2. Widget configuration
 3. Sample widget
 4. Sample cross-categorization list
+5. Detail from the CatWalker Options under Settings > Writing
 
 == Upgrade Notice ==
 
