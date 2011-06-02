@@ -96,8 +96,12 @@ function catwalker_post_attributes_func( $content ) {
 				$attribute_links .= "{$separator}<a href='{$blogurl}?attribute={$attribute->slug}'>{$attribute->name}</a>";
 				$separator = ', ';
 			}
+			$class = (get_option( 'catwalker_post_attributes_class' ));
+			if ( $class != '' ) {
+				$class = " " . $class;
+			}
 			$attribute_line = <<<EOF
-<br /><div class="entry-utility">Attributes: $attribute_links</div>\n
+<br /><div class="catwalker-post-attributes{$class}">Attributes: $attribute_links</div>\n
 EOF;
 			$content .= $attribute_line;
 		}
@@ -112,6 +116,8 @@ add_filter( 'the_content' , 'catwalker_post_attributes_func' );
  *
  * Option: to use or not use the custom taxonomy
  * Option: Choose a custom taxonomy
+ * Option: Append list of attributes to each post/page
+ * Option: CSS class for appended list of attributes
  *
  */
 
@@ -129,6 +135,12 @@ function catwalker_sanitize_default_taxonomy( $choice ) {
 		$choice = 'category';
 	}
 	return $choice;
+}
+
+//validate a css class
+function catwalker_sanitize_css_class( $class ) {
+	$class = preg_replace('/[^A-Za-z0-9-_]/', '', $class);
+	return $class;
 }
 
 //function to generate section on writing options page
@@ -172,7 +184,16 @@ function catwalker_post_attributes_option() {
 		$checked = ' checked="yes"';
 	}
 	echo <<<EOF
-<input type='checkbox' name='catwalker_post_attributes' value='true'{$checked} /> Check the box to include a list of assigned attributes at the end of each page or post.
+<input type='checkbox' name='catwalker_post_attributes' value='true'{$checked} /> Check the box to include a list of assigned attributes at the end of each page or post. 
+EOF;
+}
+
+//function to allow users to designate a CSS class that may help the attribute
+//list to harmonize with various theme styles.
+function catwalker_post_attributes_style() {
+	$value = get_option( 'catwalker_post_attributes_class' );
+	echo <<<EOF
+<input type='text' maxlength='40' name='catwalker_post_attributes_class' value='$value' /> Set this class to help style your attribute list to match your theme's tag and category lists. Mileage will vary!
 EOF;
 }
 
@@ -201,9 +222,16 @@ function catwalker_menu() {
 		'writing' ,
 		'catwalker-options'
 	);
+	add_settings_field( 'catwalker_post_attributes_class' ,
+		'CSS class for post attributes list' ,
+		'catwalker_post_attributes_style' ,
+		'writing' ,
+		'catwalker-options'
+	);
 	register_setting( 'writing' , 'catwalker_custom_taxonomy' , 'catwalker_sanitize_checkbox' );
 	register_setting( 'writing' , 'catwalker_default_taxonomy' , 'catwalker_sanitize_default_taxonomy' );
 	register_setting( 'writing' , 'catwalker_post_attributes' , 'catwalker_sanitize_checkbox' );
+	register_setting( 'writing' , 'catwalker_post_attributes_class' , 'catwalker_sanitize_css_class' );
 }
 
 //register the options functions

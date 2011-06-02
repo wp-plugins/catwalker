@@ -17,7 +17,7 @@ The catWalker plugin lets you do more with WordPress categories. The plugin has 
 1. Generate a list of cross-categorizations on a page or post
 1. List the posts or pages from a given category on a page or post
 
-In addition, users can opt to use a hierarchical custom taxonomy (called "Attributes") that applies to Pages as well as Posts.
+In addition, users can opt to use a hierarchical custom taxonomy (called "Attributes") that applies to Pages as well as Posts. If you use the Attributes taxonomy, you can also opt to list the assigned Attributes at the end of each page or post. This last function may not integrate well with all themes. You can set a CSS class on the Settings > Writing > CatWalker Options to smooth the integration, but mileage will vary. 
 
 = List categories =
 
@@ -41,7 +41,9 @@ Go to Settings > Writing to choose whether or not to use the custom "Attributes"
 
 = Cross Categorizer widget =
 
-The Cross Categorizer widget includes two configurable dropdown lists of categories. Choose two categories, then click "Search" to view the posts or pages that belong to both.
+On display pages, the Cross Categorizer widget includes two configurable dropdown lists of categories. Choose two categories, then click "Search" to view the posts or pages that belong to both.
+
+On the admin side you can configure the widget to show different category branches in each dropdown.
 
 = Cross Categorizer shortcode =
 
@@ -71,6 +73,10 @@ to list on a page or post all the posts or pages belonging to a particular categ
 
 The hierarchical custom taxonomy "Attributes" applies to Pages as well as Posts. Activated it in the "Catwalker Options" section on the "Settings > Writing" page, where you can also opt to make "Attributes" the default taxonomy for CatWalker functions.
 
+= Post Attributes Listing =
+
+If you are using the custom Attributes taxonomy, you may want to include a list of Attributes assigned to a given post or page at the end of that post or page. Many themes offer similar lists of tags and categories, but because these lists are typically theme-specific, it is not possible to provide a theme-generic solution. On the other hand, you can improve your chances by setting a CSS class for the attributes listing so that it will be styled similarly to the category listing in your theme. You can set both of these options on the Settings > Writing page in the CatWalker Options settings. 
+
 == Installation ==
 
 To install this plugin manually:
@@ -95,8 +101,12 @@ No.
 3. Sample widget
 4. Sample cross-categorization list
 5. Detail from the CatWalker Options under Settings > Writing
+6. Sample Post Attributes listing
 
 == Upgrade Notice ==
+
+= 0.8 =
+You can now include a list of assigned attributes at the end of each page or post.
 
 = 0.7 =
 List on a page or post all the pages or posts belonging to a particular category (or other taxonomy term). Set your taxonomy preference as a site-wide option.
@@ -105,6 +115,9 @@ List on a page or post all the pages or posts belonging to a particular category
 Set the preference to use or not use the custom "Attributes" taxonomy on the Writing Settings page.
 
 == Changelog ==
+
+= 0.8 =
+Introduces option to include a list of assigned attributes at the end of each post or page.
 
 = 0.7 =
 1. List on a page or post all the pages or posts belonging to a particular category (or other taxonomy term).
