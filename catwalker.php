@@ -4,7 +4,7 @@ Plugin Name: catWalker
 Plugin URI: http://wordpress.blogs.wesleyan.edu/plugins/catwalker/
 Description: List categories, cross-categorizations or category posts in page or 
 post contents. Let users search for the intersection of two categories. 
-Version: 0.7
+Version: 0.8
 Author: Kevin Wiliarty
 Author URI: http://kwiliarty.blogs.wesleyan.edu/
 */
@@ -80,6 +80,36 @@ if ( ( get_option('catwalker_custom_taxonomy') == "true" ) ) {
 
 /**
  *
+ * Append post/page attributes to the content
+ *
+ */
+
+//function to add attribute information to the end of each post or page
+function catwalker_post_attributes_func( $content ) {
+	if ( get_option( 'catwalker_post_attributes' ) == "true" ) {
+		$attributes = get_the_terms( $post->ID , 'attribute' );
+		if ( $attributes ) {
+			$blogurl = get_bloginfo('url');
+			$attribute_links = '';
+			$separator = '';
+			foreach ($attributes as $attribute) {
+				$attribute_links .= "{$separator}<a href='{$blogurl}?attribute={$attribute->slug}'>{$attribute->name}</a>";
+				$separator = ', ';
+			}
+			$attribute_line = <<<EOF
+<br /><div class="entry-utility">Attributes: $attribute_links</div>\n
+EOF;
+			$content .= $attribute_line;
+		}
+	}
+	return $content;
+}
+
+//add filter on the_content
+add_filter( 'the_content' , 'catwalker_post_attributes_func' );
+
+/**
+ *
  * Option: to use or not use the custom taxonomy
  * Option: Choose a custom taxonomy
  *
@@ -115,7 +145,7 @@ function catwalker_custom_taxonomy_option() {
 		$checked = ' checked="yes"';
 	}
 	echo <<<EOF
-<input type='checkbox' name='catwalker_custom_taxonomy' value='true'{$checked} /> Check the box to use a custom hierarchical taxonomy (called "Attributes") that can be set for both Posts and Pages.
+<input type='checkbox' name='catwalker_custom_taxonomy' value='true'{$checked} /> Check the box to use a custom hierarchical taxonomy (called "Attributes") that can be set for both posts and pages.
 EOF;
 }
 
@@ -132,6 +162,17 @@ function catwalker_default_taxonomy_dropdown() {
 <option name='category' value='category'$category_selected>Categories</option>
 <option name='attribute' value='attribute'$attribute_selected>Attributes</option>
 <select> Choose which taxonomy the CatWalker plugin will treat as a default.
+EOF;
+}
+
+//function to generate checkbox for adding Attribute data to end of content
+function catwalker_post_attributes_option() {
+	$checked='';
+	if ( get_option('catwalker_post_attributes') == "true" ) {
+		$checked = ' checked="yes"';
+	}
+	echo <<<EOF
+<input type='checkbox' name='catwalker_post_attributes' value='true'{$checked} /> Check the box to include a list of assigned attributes at the end of each page or post.
 EOF;
 }
 
@@ -154,8 +195,15 @@ function catwalker_menu() {
 		'writing' ,
 		'catwalker-options' 
 	);
+	add_settings_field( 'catwalker_post_attributes' ,
+		'Append Post/Page Attributes' ,
+		'catwalker_post_attributes_option' ,
+		'writing' ,
+		'catwalker-options'
+	);
 	register_setting( 'writing' , 'catwalker_custom_taxonomy' , 'catwalker_sanitize_checkbox' );
 	register_setting( 'writing' , 'catwalker_default_taxonomy' , 'catwalker_sanitize_default_taxonomy' );
+	register_setting( 'writing' , 'catwalker_post_attributes' , 'catwalker_sanitize_checkbox' );
 }
 
 //register the options functions
