@@ -25,3 +25,7 @@ margin-top: 5px;
 opacity: 0.3;
 filter:alpha(opacity=30);
 }
+
+.catwalker-related {
+	list-style-type: none;
+}

@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 include('crosscat_query.class.php');
+include('catwalker_list.class.php');
 
 /**
  * Custom Taxonomy: Attribute
@@ -79,6 +80,57 @@ if ( ( get_option('catwalker_custom_taxonomy') == "true" ) ) {
 	//hook into the init action to create the taxonomy
 	add_action( 'init' , 'create_attributes_taxonomy' , 0 );
 }
+
+/**
+ *
+ * Append list of related posts/pages to the content
+ *
+ */
+
+//function to add a list of related items based on the default taxonomy
+function catwalker_list_related( $content ) {
+	if ( get_option( 'catwalker_related' ) == "true" ) {
+		//ensure that taxonomy is not empty
+		$taxonomy = 'category';
+		//but use the preference if it is set
+		if ( get_option( 'catwalker_default_taxonomy' ) ) {
+			$taxonomy = get_option( 'catwalker_default_taxonomy' );
+		}
+		//get the categories or attributes
+		$terms = get_the_terms( $post->ID , $taxonomy );
+		if ( $terms ) {
+			global $post;
+			$postID = $post->ID;
+			//start an unordered list
+			$related_list = "<ul class='catwalker-related'>\n";
+			//build the list of related posts/pages for each term
+			foreach ($terms as $term) {
+				$nested_list = new catwalker_list(
+					$postID ,
+					'ASC' ,
+					'title' ,
+					-1 ,
+					'id' ,
+					$taxonomy ,
+					$term->term_id );
+				$post_UL = $nested_list->post_list;
+				//open top level li
+				$related_list .= "<li>Also listed under '{$term->name}'...\n";
+				$related_list .= $post_UL;
+				//close top level li
+				$related_list .= "</li>\n";
+			}
+			//close the unordered list
+			$related_list .= "</ul>\n";
+			//and add it to the content
+			$content .= $related_list;
+		}
+	}
+	return $content;
+}
+
+//hook the filter to the content
+add_filter( 'the_content' , 'catwalker_list_related' );
 
 /**
  *
