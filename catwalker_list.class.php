@@ -4,6 +4,7 @@ class catwalker_list{
 
 	/*** public properties ***/
 	public $post_list;
+	public $list_count;
 
 	/*** the constructor ***/
 	public function __construct(
@@ -46,6 +47,7 @@ class catwalker_list{
 		wp_reset_postdata();
 
 		$this->post_list = $list;
+		$this->list_count = $internal_query->post_count;
 
 	}
 

@@ -101,8 +101,8 @@ function catwalker_list_related( $content ) {
 		if ( $terms ) {
 			global $post;
 			$postID = $post->ID;
-			//start an unordered list
-			$related_list = "<ul class='catwalker-related'>\n";
+			//start a div and an unordered list
+			$related_list = "<div class='catwalker-related'><ul>\n";
 			//build the list of related posts/pages for each term
 			foreach ($terms as $term) {
 				$nested_list = new catwalker_list(
@@ -114,14 +114,16 @@ function catwalker_list_related( $content ) {
 					$taxonomy ,
 					$term->term_id );
 				$post_UL = $nested_list->post_list;
-				//open top level li
-				$related_list .= "<li>Also listed under '{$term->name}'...\n";
-				$related_list .= $post_UL;
-				//close top level li
-				$related_list .= "</li>\n";
+				if ( $nested_list->list_count > 1 ) {
+					$related_list .= <<<EOF
+<li>Also listed under '{$term->name}' ...
+	$post_UL
+	</li>
+EOF;
+				}
 			}
-			//close the unordered list
-			$related_list .= "</ul>\n";
+			//close the unordered list and div
+			$related_list .= "</ul></div>\n";
 			//and add it to the content
 			$content .= $related_list;
 		}

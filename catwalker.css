@@ -26,6 +26,6 @@ opacity: 0.3;
 filter:alpha(opacity=30);
 }
 
-.catwalker-related {
+.catwalker-related ul {
 	list-style-type: none;
 }
