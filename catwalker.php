@@ -4,7 +4,7 @@ Plugin Name: catWalker
 Plugin URI: http://wordpress.blogs.wesleyan.edu/plugins/catwalker/
 Description: List categories, cross-categorizations or category posts in page or 
 post contents. Let users search for the intersection of two categories. 
-Version: 0.8
+Version: 0.9
 Author: Kevin Wiliarty
 Author URI: http://kwiliarty.blogs.wesleyan.edu/
 */
@@ -42,6 +42,7 @@ include('crosscat_query.class.php');
  */
 
 // If the taxonomy 'attribute' is not already registered
+// and if the preference is selected
 if ( !taxonomy_exists( 'attribute' ) && ( get_option('catwalker_custom_taxonomy') == "true" )) {
 
 	// register the taxonomy
@@ -73,6 +74,7 @@ if ( !taxonomy_exists( 'attribute' ) && ( get_option('catwalker_custom_taxonomy'
 	}
 }
 
+//If the custom taxonomy preference is selected
 if ( ( get_option('catwalker_custom_taxonomy') == "true" ) ) {
 	//hook into the init action to create the taxonomy
 	add_action( 'init' , 'create_attributes_taxonomy' , 0 );
@@ -92,10 +94,12 @@ function catwalker_post_attributes_func( $content ) {
 			$blogurl = get_bloginfo('url');
 			$attribute_links = '';
 			$separator = '';
+			//build a comma separated list of Attribute links
 			foreach ($attributes as $attribute) {
 				$attribute_links .= "{$separator}<a href='{$blogurl}?attribute={$attribute->slug}'>{$attribute->name}</a>";
 				$separator = ', ';
 			}
+			//use a custom class from the options settings
 			$class = (get_option( 'catwalker_post_attributes_class' ));
 			if ( $class != '' ) {
 				$class = " " . $class;
@@ -115,9 +119,16 @@ add_filter( 'the_content' , 'catwalker_post_attributes_func' );
 /**
  *
  * Option: to use or not use the custom taxonomy
- * Option: Choose a custom taxonomy
+ * Option: Choose a default taxonomy
  * Option: Append list of attributes to each post/page
  * Option: CSS class for appended list of attributes
+ * Option: Include a list of related posts
+ *
+ */
+
+/**
+ *
+ * Callbacks to validate submitted options
  *
  */
 
@@ -142,6 +153,12 @@ function catwalker_sanitize_css_class( $class ) {
 	$class = preg_replace('/[^A-Za-z0-9-_]/', '', $class);
 	return $class;
 }
+
+/**
+ *
+ * Functions to generate the options form fields
+ *
+ */
 
 //function to generate section on writing options page
 function catwalker_options() {
@@ -197,6 +214,23 @@ function catwalker_post_attributes_style() {
 EOF;
 }
 
+//function to generate checkbox for including list of related posts/pages
+function catwalker_related_option() {
+	$checked = '';
+	if ( get_option('catwalker_related') == "true" ) {
+		$checked = ' checked="yes"';
+	}
+	echo <<<EOF
+<input type='checkbox' name='catwalker_related' value='true'{$checked} /> Check the box to include a list of related posts/pages at the end of each entry.
+EOF;
+}
+
+/**
+ *
+ * Adding the settings to the Settings > Writing page
+ *
+ */
+
 //add the catwalker options to the writing preferences page
 function catwalker_menu() {
 	add_settings_section( 'catwalker-options' ,
@@ -228,13 +262,22 @@ function catwalker_menu() {
 		'writing' ,
 		'catwalker-options'
 	);
+	add_settings_field( 'catwalker_related' ,
+		'Include list of related items' ,
+		'catwalker_related_option' ,
+		'writing' ,
+		'catwalker-options'
+	);
+
+	//register the settings options
 	register_setting( 'writing' , 'catwalker_custom_taxonomy' , 'catwalker_sanitize_checkbox' );
 	register_setting( 'writing' , 'catwalker_default_taxonomy' , 'catwalker_sanitize_default_taxonomy' );
 	register_setting( 'writing' , 'catwalker_post_attributes' , 'catwalker_sanitize_checkbox' );
 	register_setting( 'writing' , 'catwalker_post_attributes_class' , 'catwalker_sanitize_css_class' );
+	register_setting( 'writing' , 'catwalker_related' , 'catwalker_sanitize_checkbox' );
 }
 
-//register the options functions
+//Hook to add the custom options 
 add_action( 'admin_init' , 'catwalker_menu' );
 
 /**
