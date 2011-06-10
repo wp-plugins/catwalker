@@ -90,29 +90,41 @@ if ( ( get_option('catwalker_custom_taxonomy') == "true" ) ) {
 //function to add a list of related items based on the default taxonomy
 function catwalker_list_related( $content ) {
 	if ( get_option( 'catwalker_related' ) == "true" ) {
+
 		//ensure that taxonomy is not empty
 		$taxonomy = 'category';
 		//but use the preference if it is set
 		if ( get_option( 'catwalker_default_taxonomy' ) ) {
 			$taxonomy = get_option( 'catwalker_default_taxonomy' );
 		}
+		
 		//get the categories or attributes
 		$terms = get_the_terms( $post->ID , $taxonomy );
+
+		//if the post has assigned categories or attributes
 		if ( $terms ) {
+
+			//establish the current post as an anchor point
 			global $post;
 			$postID = $post->ID;
+			
 			//get the terms that have been listed for inclusion
 			$include_ids = get_option( 'catwalker_related_include_ids' );
-			//turn the comma separated string into an array
+			$include_children = get_option( 'catwalker_related_include_children' );
+			//turn the comma separated strings into an array
 			$include_ids_array = explode( ',' , $include_ids );
+			$include_children_array = explode( ',' , $include_children );
+			
 			//start a div and an unordered list
 			$related_list = "<div class='catwalker-related'><ul>\n";
 			//build the list of related posts/pages for each term
 			foreach ($terms as $term) {
-				//if specific id's have been listed for inclusion
-				if ( $include_ids && ( $include_ids != '' )) {
-					//and if the current term is not in that list
-					if ( !in_array( $term->term_id , $include_ids_array )) {
+				//if specific id's or parent-terms have been listed for inclusion
+				if ( ( $include_ids && ( $include_ids != '' )) || 
+					 ( $include_children && ( $include_children != '' ))) {
+					//and if the current term is not in either list
+					 if ( !in_array( $term->term_id , $include_ids_array ) &&
+					      !in_array( $term->parent , $include_children_array )) {
 						//jump to the next term
 						continue;
 					}	
@@ -364,7 +376,7 @@ function catwalker_menu() {
 		'catwalker-options'
 	);
 	add_settings_field( 'catwalker_related_include_children' ,
-		'Include related items only for child terms of a given term' ,
+		'Include related items only for children of' ,
 		'catwalker_related_include_children_input' ,
 		'writing' ,
 		'catwalker-options'
