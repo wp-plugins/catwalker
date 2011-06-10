@@ -119,6 +119,8 @@ Set the preference to use or not use the custom "Attributes" taxonomy on the Wri
 = 0.9 =
 Introduces option to include a list of related posts or pages at the end of each entry.
 
+Includes option to specify terms for which to include related posts.
+
 = 0.8 =
 Introduces option to include a list of assigned attributes at the end of each post or page.
 

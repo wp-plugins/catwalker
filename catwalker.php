@@ -101,10 +101,22 @@ function catwalker_list_related( $content ) {
 		if ( $terms ) {
 			global $post;
 			$postID = $post->ID;
+			//get the terms that have been listed for inclusion
+			$include_ids = get_option( 'catwalker_related_include_ids' );
+			//turn the comma separated string into an array
+			$include_ids_array = explode( ',' , $include_ids );
 			//start a div and an unordered list
 			$related_list = "<div class='catwalker-related'><ul>\n";
 			//build the list of related posts/pages for each term
 			foreach ($terms as $term) {
+				//if specific id's have been listed for inclusion
+				if ( $include_ids && ( $include_ids != '' )) {
+					//and if the current term is not in that list
+					if ( !in_array( $term->term_id , $include_ids_array )) {
+						//jump to the next term
+						continue;
+					}	
+				}
 				$nested_list = new catwalker_list(
 					$postID ,
 					'ASC' ,

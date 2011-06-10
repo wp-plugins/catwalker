@@ -28,4 +28,10 @@ filter:alpha(opacity=30);
 
 .catwalker-related ul {
 	list-style-type: none;
+	margin: 1em 0;
+	padding: 0;
+}
+
+.catwalker-related ul ul {
+	margin: 0 1em;
 }
