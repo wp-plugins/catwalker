@@ -16,8 +16,10 @@ The catWalker plugin lets you do more with WordPress categories. The plugin has 
 1. Create a configurable widget that will make it easy for visitors to find posts or pages at the intersection of two categories
 1. Generate a list of cross-categorizations on a page or post
 1. List the posts or pages from a given category on a page or post
+1. Automatically list at the bottom of each post the categories which have been assigned to that post
+1. Automatically list at the bottom of each post other posts in the same category
 
-In addition, users can opt to use a hierarchical custom taxonomy (called "Attributes") that applies to Pages as well as Posts. If you use the Attributes taxonomy, you can also opt to list the assigned Attributes at the end of each page or post. This last function may not integrate well with all themes. You can set a CSS class on the Settings > Writing > CatWalker Options to smooth the integration, but mileage will vary. 
+In addition, users can opt to use a hierarchical custom taxonomy (called "Attributes") that applies to Pages as well as Posts. If you use the Attributes taxonomy, all of the above options can be used on pages as well as posts.  
 
 = List categories =
 
@@ -77,6 +79,10 @@ The hierarchical custom taxonomy "Attributes" applies to Pages as well as Posts.
 
 If you are using the custom Attributes taxonomy, you may want to include a list of Attributes assigned to a given post or page at the end of that post or page. Many themes offer similar lists of tags and categories, but because these lists are typically theme-specific, it is not possible to provide a theme-generic solution. On the other hand, you can improve your chances by setting a CSS class for the attributes listing so that it will be styled similarly to the category listing in your theme. You can set both of these options on the Settings > Writing page in the CatWalker Options settings. 
 
+= Related Posts Listing =
+
+You can automatically add a list of related posts or pages to the end of every post or page by checking the appropriate box on the Settings > Writing page. You can designate specific categories or attributes to be included, you can specify categories or attributes whose child-terms will be included, or you can leave those inputs blank to list related posts for all terms. This function will operate only on your CatWalker default taxonomy. 
+
 == Installation ==
 
 To install this plugin manually:
@@ -102,8 +108,12 @@ No.
 4. Sample cross-categorization list
 5. Detail from the CatWalker Options under Settings > Writing
 6. Sample Post Attributes listing
+7. Sample Related Posts listing
 
 == Upgrade Notice ==
+
+= 0.9 =
+This version lets you automatically add lists of related posts to each entry. More configuration options for this feature to follow.
 
 = 0.8 =
 You can now include a list of assigned attributes at the end of each page or post.
@@ -117,9 +127,7 @@ Set the preference to use or not use the custom "Attributes" taxonomy on the Wri
 == Changelog ==
 
 = 0.9 =
-Introduces option to include a list of related posts or pages at the end of each entry.
-
-Includes option to specify terms for which to include related posts.
+Introduces option to include a list of related posts or pages at the end of each entry. Settings for this option will limit the functionality to specific categories or attributes, or to child-terms of specific categories or attributes. More configuration options will follow.
 
 = 0.8 =
 Introduces option to include a list of assigned attributes at the end of each post or page.
