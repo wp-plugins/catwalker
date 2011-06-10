@@ -177,6 +177,7 @@ add_filter( 'the_content' , 'catwalker_post_attributes_func' );
  * Option: Append list of attributes to each post/page
  * Option: CSS class for appended list of attributes
  * Option: Include a list of related posts
+ * Option: Show related posts only for specific terms
  *
  */
 
@@ -206,6 +207,12 @@ function catwalker_sanitize_default_taxonomy( $choice ) {
 function catwalker_sanitize_css_class( $class ) {
 	$class = preg_replace('/[^A-Za-z0-9-_]/', '', $class);
 	return $class;
+}
+
+//validate a comma-separated list of numbers
+function catwalker_sanitize_commalist( $input ) {
+	$input = preg_replace( '/[^0-9,]/' , '' , $input);
+	return $input;
 }
 
 /**
@@ -279,6 +286,14 @@ function catwalker_related_option() {
 EOF;
 }
 
+//function to generate input for terms to include in related posts
+function catwalker_related_include_ids_input() {
+	$value = get_option( 'catwalker_related_include_ids' );
+	echo <<<EOF
+<input type='text' name='catwalker_related_include_ids' value='$value' /> Comma-separated list of term id's for which to include a related-posts list. Leave blank to include all.
+EOF;
+}
+
 /**
  *
  * Adding the settings to the Settings > Writing page
@@ -322,6 +337,12 @@ function catwalker_menu() {
 		'writing' ,
 		'catwalker-options'
 	);
+	add_settings_field( 'catwalker_related_include_ids' ,
+		'Include related items only for specific terms' ,
+		'catwalker_related_include_ids_input' ,
+		'writing' ,
+		'catwalker-options'
+	);
 
 	//register the settings options
 	register_setting( 'writing' , 'catwalker_custom_taxonomy' , 'catwalker_sanitize_checkbox' );
@@ -329,6 +350,7 @@ function catwalker_menu() {
 	register_setting( 'writing' , 'catwalker_post_attributes' , 'catwalker_sanitize_checkbox' );
 	register_setting( 'writing' , 'catwalker_post_attributes_class' , 'catwalker_sanitize_css_class' );
 	register_setting( 'writing' , 'catwalker_related' , 'catwalker_sanitize_checkbox' );
+	register_setting( 'writing' , 'catwalker_related_include_ids' , 'catwalker_sanitize_commalist' );
 }
 
 //Hook to add the custom options 
