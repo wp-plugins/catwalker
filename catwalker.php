@@ -190,6 +190,7 @@ add_filter( 'the_content' , 'catwalker_post_attributes_func' );
  * Option: CSS class for appended list of attributes
  * Option: Include a list of related posts
  * Option: Show related posts only for specific terms
+ * Option: Show related posts for child-terms of specific terms
  *
  */
 
@@ -306,6 +307,13 @@ function catwalker_related_include_ids_input() {
 EOF;
 }
 
+//function to generate input for child-terms to include in related posts
+function catwalker_related_include_children_input() {
+	$value = get_option( 'catwalker_related_include_children' );
+	echo <<<EOF
+<input type='text' name='catwalker_related_include_children' value='$value' /> Comma-separated list of term id's whose child-terms should be included in a related-posts list. Leave blank to include all.
+EOF;
+}
 /**
  *
  * Adding the settings to the Settings > Writing page
@@ -355,6 +363,12 @@ function catwalker_menu() {
 		'writing' ,
 		'catwalker-options'
 	);
+	add_settings_field( 'catwalker_related_include_children' ,
+		'Include related items only for child terms of a given term' ,
+		'catwalker_related_include_children_input' ,
+		'writing' ,
+		'catwalker-options'
+	);
 
 	//register the settings options
 	register_setting( 'writing' , 'catwalker_custom_taxonomy' , 'catwalker_sanitize_checkbox' );
@@ -363,6 +377,7 @@ function catwalker_menu() {
 	register_setting( 'writing' , 'catwalker_post_attributes_class' , 'catwalker_sanitize_css_class' );
 	register_setting( 'writing' , 'catwalker_related' , 'catwalker_sanitize_checkbox' );
 	register_setting( 'writing' , 'catwalker_related_include_ids' , 'catwalker_sanitize_commalist' );
+	register_setting( 'writing' , 'catwalker_related_include_children' , 'catwalker_sanitize_commalist' );
 }
 
 //Hook to add the custom options 
