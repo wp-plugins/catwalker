@@ -4,7 +4,7 @@ Plugin Name: catWalker
 Plugin URI: http://wordpress.blogs.wesleyan.edu/plugins/catwalker/
 Description: List categories, cross-categorizations or category posts in page or 
 post contents. Let users search for the intersection of two categories. 
-Version: 0.9
+Version: 1.0
 Author: Kevin Wiliarty
 Author URI: http://kwiliarty.blogs.wesleyan.edu/
 */
@@ -196,6 +196,8 @@ add_filter( 'the_content' , 'catwalker_post_attributes_func' );
 
 /**
  *
+ * Options page, including:
+ *
  * Option: to use or not use the custom taxonomy
  * Option: Choose a default taxonomy
  * Option: Append list of attributes to each post/page
@@ -203,6 +205,7 @@ add_filter( 'the_content' , 'catwalker_post_attributes_func' );
  * Option: Include a list of related posts
  * Option: Show related posts only for specific terms
  * Option: Show related posts for child-terms of specific terms
+ * Option: Exclude related posts for specific terms
  *
  */
 
@@ -326,6 +329,15 @@ function catwalker_related_include_children_input() {
 <input type='text' name='catwalker_related_include_children' value='$value' /> Comma-separated list of term id's whose child-terms should be included in a related-posts list. Leave blank to include all.
 EOF;
 }
+
+//function to generate input for terms to exclude from related posts
+function catwalker_related_exclude_ids_input() {
+	$value = get_option( 'catwalker_related_exclude_ids' );
+	echo <<<EOF
+<input type='text' name='catwalker_related_exclude_ids' value='$value' /> Comma-separated list of term id's for which no related-posts list should be generated. 
+EOF;
+}
+
 /**
  *
  * Adding the settings to the Settings > Writing page
@@ -381,6 +393,12 @@ function catwalker_menu() {
 		'writing' ,
 		'catwalker-options'
 	);
+	add_settings_field( 'catwalker_related_exclude_ids' ,
+		'Exclude related items for specific terms' ,
+		'catwalker_related_exclude_ids_input' ,
+		'writing' ,
+		'catwalker-options'
+	);
 
 	//register the settings options
 	register_setting( 'writing' , 'catwalker_custom_taxonomy' , 'catwalker_sanitize_checkbox' );
@@ -390,6 +408,7 @@ function catwalker_menu() {
 	register_setting( 'writing' , 'catwalker_related' , 'catwalker_sanitize_checkbox' );
 	register_setting( 'writing' , 'catwalker_related_include_ids' , 'catwalker_sanitize_commalist' );
 	register_setting( 'writing' , 'catwalker_related_include_children' , 'catwalker_sanitize_commalist' );
+	register_setting( 'writing' , 'catwalker_related_exclude_ids' , 'catwalker_sanitize_commalist' );
 }
 
 //Hook to add the custom options 

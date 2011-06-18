@@ -81,7 +81,7 @@ If you are using the custom Attributes taxonomy, you may want to include a list 
 
 = Related Posts Listing =
 
-You can automatically add a list of related posts or pages to the end of every post or page by checking the appropriate box on the Settings > Writing page. You can designate specific categories or attributes to be included, you can specify categories or attributes whose child-terms will be included, or you can leave those inputs blank to list related posts for all terms. This function will operate only on your CatWalker default taxonomy. 
+You can automatically add a list of related posts or pages to the end of every post or page by checking the appropriate box on the Settings > Writing page. You can designate specific categories or attributes to be included, you can specify categories or attributes whose child-terms will be included, or you can leave those inputs blank to list related posts for all terms. In a similar way, you can list terms for which to include no related-posts lists. The automated related-posts listing will operate only on your CatWalker default taxonomy. 
 
 == Installation ==
 
@@ -112,6 +112,10 @@ No.
 
 == Upgrade Notice ==
 
+= 1.0 =
+
+Ready for a version bump, not so much because of any major change, but more because of the cumulative improvements over the last several versions. This latest release includes more options for the automated related-posts lists.
+
 = 0.9 =
 This version lets you automatically add lists of related posts to each entry. More configuration options for this feature to follow.
 
@@ -125,6 +129,9 @@ List on a page or post all the pages or posts belonging to a particular category
 Set the preference to use or not use the custom "Attributes" taxonomy on the Writing Settings page.
 
 == Changelog ==
+
+= 1.0 =
+Introduces an option to exclude certain terms from the automated related-posts lists that can be added to the end of each item.
 
 = 0.9 =
 Introduces option to include a list of related posts or pages at the end of each entry. Settings for this option will limit the functionality to specific categories or attributes, or to child-terms of specific categories or attributes. More configuration options will follow.
