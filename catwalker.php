@@ -108,12 +108,15 @@ function catwalker_list_related( $content ) {
 			global $post;
 			$postID = $post->ID;
 			
-			//get the terms that have been listed for inclusion
+			//get the terms that have been listed for inclusion or exclusion
 			$include_ids = get_option( 'catwalker_related_include_ids' );
 			$include_children = get_option( 'catwalker_related_include_children' );
+			$exclude_ids = get_option( 'catwalker_related_exclude_ids' );
+
 			//turn the comma separated strings into an array
 			$include_ids_array = explode( ',' , $include_ids );
 			$include_children_array = explode( ',' , $include_children );
+			$exclude_ids_array = explode( ',' , $exclude_ids );
 			
 			//start a div and an unordered list
 			$related_list = "<div class='catwalker-related'><ul>\n";
@@ -128,6 +131,12 @@ function catwalker_list_related( $content ) {
 						//jump to the next term
 						continue;
 					}	
+				}
+				//or if the current term is in a list of terms to exclude
+				//worth noting that exclusions will trump conflicting inclusions
+				if ( in_array( $term->term_id , $exclude_ids_array )) {
+					//jump to the next term
+					continue;
 				}
 				$nested_list = new catwalker_list(
 					$postID ,
