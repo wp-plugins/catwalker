@@ -347,6 +347,14 @@ function catwalker_related_exclude_ids_input() {
 EOF;
 }
 
+//function to generate input for child-terms to exclude from related posts
+function catwalker_related_exclude_children_input() {
+	$value = get_option( 'catwalker_related_exclude_children' );
+	echo <<<EOF
+<input type='text' name='catwalker_related_exclude_children' value='$value' /> Comma-separated list of term id's whose child-terms should not be included in a related-posts list.
+EOF;
+}
+
 /**
  *
  * Adding the settings to the Settings > Writing page
@@ -408,6 +416,12 @@ function catwalker_menu() {
 		'writing' ,
 		'catwalker-options'
 	);
+	add_settings_field( 'catwalker_related_exclude_children' ,
+		'Exclude related items for children of' ,
+		'catwalker_related_exclude_children_input' ,
+		'writing' ,
+		'catwalker-options'
+	);
 
 	//register the settings options
 	register_setting( 'writing' , 'catwalker_custom_taxonomy' , 'catwalker_sanitize_checkbox' );
@@ -418,6 +432,7 @@ function catwalker_menu() {
 	register_setting( 'writing' , 'catwalker_related_include_ids' , 'catwalker_sanitize_commalist' );
 	register_setting( 'writing' , 'catwalker_related_include_children' , 'catwalker_sanitize_commalist' );
 	register_setting( 'writing' , 'catwalker_related_exclude_ids' , 'catwalker_sanitize_commalist' );
+	register_setting( 'writing' , 'catwalker_related_exclude_children' , 'catwalker_sanitize_commalist' );
 }
 
 //Hook to add the custom options 
