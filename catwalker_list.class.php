@@ -16,6 +16,9 @@ class catwalker_list{
 		$taxonomy , /* category or attribute */
 		$terms /* id or slug of the current category or attribute */
 	) {
+		//make $terms into an array
+		$terms_array = explode( ',' , $terms );
+
 		$internal_query = new WP_Query(
 			array(
 				'order'          => $order,
@@ -25,7 +28,7 @@ class catwalker_list{
 					array(
 						'field'    => $field,
 						'taxonomy' => $taxonomy,
-						'terms'    => array($terms),
+						'terms'    => $terms_array,
 					)
 				)
 			)
@@ -35,8 +38,10 @@ class catwalker_list{
 		while( $internal_query->have_posts() ) {
 			$internal_query->the_post();
 			$internal_postID = $internal_query->post->ID;
-			//skip the current global post
-			if ( $postID == $internal_postID ) { continue; }
+			//skip the global post unless it fills a posts-per-page setting
+			if ( $postID == $internal_postID && !( $posts_per_page > 0 )) { 
+				continue; 
+			}
 			//create the link
 			$post_title = $internal_query->post->post_title;
 			$post_permalink = get_permalink($internal_postID);

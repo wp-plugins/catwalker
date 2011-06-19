@@ -131,7 +131,8 @@ Set the preference to use or not use the custom "Attributes" taxonomy on the Wri
 == Changelog ==
 
 = 1.0 =
-Introduces an option to exclude certain terms from the automated related-posts lists that can be added to the end of each item.
+1. Introduces an option to exclude certain terms from the automated related-posts lists that can be added to the end of each item.
+1. Option to exclude child-terms of a given term from related-posts lists
 
 = 0.9 =
 Introduces option to include a list of related posts or pages at the end of each entry. Settings for this option will limit the functionality to specific categories or attributes, or to child-terms of specific categories or attributes. More configuration options will follow.

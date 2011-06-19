@@ -112,11 +112,13 @@ function catwalker_list_related( $content ) {
 			$include_ids = get_option( 'catwalker_related_include_ids' );
 			$include_children = get_option( 'catwalker_related_include_children' );
 			$exclude_ids = get_option( 'catwalker_related_exclude_ids' );
+			$exclude_children = get_option( 'catwalker_related_exclude_children' );
 
 			//turn the comma separated strings into an array
 			$include_ids_array = explode( ',' , $include_ids );
 			$include_children_array = explode( ',' , $include_children );
 			$exclude_ids_array = explode( ',' , $exclude_ids );
+			$exclude_children_array = explode( ',' , $exclude_children );
 			
 			//start a div and an unordered list
 			$related_list = "<div class='catwalker-related'><ul>\n";
@@ -134,7 +136,8 @@ function catwalker_list_related( $content ) {
 				}
 				//or if the current term is in a list of terms to exclude
 				//worth noting that exclusions will trump conflicting inclusions
-				if ( in_array( $term->term_id , $exclude_ids_array )) {
+				if ( in_array( $term->term_id , $exclude_ids_array ) || 
+				     in_array( $term->parent , $exclude_children_array )) {
 					//jump to the next term
 					continue;
 				}
@@ -215,6 +218,7 @@ add_filter( 'the_content' , 'catwalker_post_attributes_func' );
  * Option: Show related posts only for specific terms
  * Option: Show related posts for child-terms of specific terms
  * Option: Exclude related posts for specific terms
+ * Option: Exclude related posts for child-terms of specific terms
  *
  */
 
@@ -720,37 +724,18 @@ function catwalker_posts( $atts ) {
 
 	//return the contents
 	//create internal query
-	$internal_query = new WP_Query(
-		array(
-			'order'          => $order,
-			'orderby'        => $orderby,
-			'posts_per_page' => $posts_per_page,
-			'tax_query' => array(
-				array(
-					'field'    => $field,
-					'taxonomy' => $taxonomy,
-					'terms'    => array($terms),
-				)
-			)
-		)
-	);
-
-	//The internal loop
-	//get the ID for the current post
 	global $post;
-	$global_postID = $post->ID;
-	$content = '';
-	while( $internal_query->have_posts() ) {
-		$internal_query->the_post();
-		$postID = $internal_query->post->ID;
-		//skip the current global post
-		if ( $postID == $global_postID ) { continue; }
-		//create the link
-		$post_title = $internal_query->post->post_title;
-		$post_permalink = get_permalink($postID);
-		$content .= "<a href='$post_permalink'>$post_title</a><br />\n";
-	}
-	wp_reset_postdata();
+	$category_posts_query = new catwalker_list(
+		$post->ID ,
+		$order ,
+		$orderby ,
+		$posts_per_page ,
+		$field ,
+		$taxonomy ,
+		$terms
+	);
+	$content = $category_posts_query->post_list;
+
 	return $content;
 }
 
