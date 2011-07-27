@@ -177,17 +177,23 @@ add_filter( 'the_content' , 'catwalker_list_related' );
  */
 
 //function to rewrite category links
-function catwalker_custom_cat_page( $orderby ) {
+function catwalker_custom_archive_sorter( $orderclause ) {
 
-	echo "<pre>Debug: ";
-	print_r( $orderby );
-	echo "</pre>";
-	$orderby = "wp_posts.post_title ASC";
-	return $orderby;
+	//if ( is_tax() ) {
+	//This conditional should work, but it is not so I use the below
+	
+	if ( is_category() ) {
+		$orderby = get_option( 'catwalker_custom_archive_orderby' );
+		$order = get_option( 'catwalker_custom_archive_order' );
+		$orderclause = "wp_posts.post_{$orderby} {$order}";
+		return $orderclause;
+	}
 }
 
 //hook the filter to the category link
-add_filter( 'posts_orderby' , 'catwalker_custom_cat_page' ); 
+if ( get_option( 'catwalker_custom_archive_sort' ) == 'true' ) {
+	add_filter( 'posts_orderby' , 'catwalker_custom_archive_sorter' ); 
+}
 
 /**
  *
@@ -288,8 +294,8 @@ function catwalker_sanitize_orderby_dropdown( $orderby ) {
 
 //validate order dropdown
 function catwalker_sanitize_order_dropdown( $order ) {
-	if ( ( $order != 'desc' ) && ( $order != 'asc' ) ) {
-		$order = 'desc';
+	if ( ( $order != 'DESC' ) && ( $order != 'ASC' ) ) {
+		$order = 'DESC';
 	}
 	return $order;
 }
@@ -383,16 +389,16 @@ EOF;
 
 //function to generate dropdown for custom archive order
 function catwalker_custom_archive_order_dropdown() {
-	$asc_selected = '';
-	$desc_selected = ' selected="selected"';
-	if ( get_option('catwalker_custom_archive_order') == 'asc' ) {
-		$asc_selected = ' selected="selected"';
-		$desc_selected = '';
+	$ASC_selected = '';
+	$DESC_selected = ' selected="selected"';
+	if ( get_option('catwalker_custom_archive_order') == 'ASC' ) {
+		$ASC_selected = ' selected="selected"';
+		$DESC_selected = '';
 	}
 	echo <<<EOF
 <select name='catwalker_custom_archive_order'>
-<option name='desc' value='desc'$desc_selected>Descending order</option>
-<option name='asc' value='asc'$asc_selected>Ascending order</option>
+<option name='DESC' value='DESC'$DESC_selected>Descending order</option>
+<option name='ASC' value='ASC'$ASC_selected>Ascending order</option>
 <select> Choose whether to sort posts in descending or ascending order
 EOF;
 }
