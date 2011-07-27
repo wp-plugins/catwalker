@@ -4,7 +4,7 @@ Plugin Name: catWalker
 Plugin URI: http://wordpress.blogs.wesleyan.edu/plugins/catwalker/
 Description: List categories, cross-categorizations or category posts in page or 
 post contents. Let users search for the intersection of two categories. 
-Version: 1.0
+Version: 1.1
 Author: Kevin Wiliarty
 Author URI: http://kwiliarty.blogs.wesleyan.edu/
 */
@@ -172,6 +172,25 @@ add_filter( 'the_content' , 'catwalker_list_related' );
 
 /**
  *
+ * Filter category links to point to a flagship post
+ *
+ */
+
+//function to rewrite category links
+function catwalker_custom_cat_page( $orderby ) {
+
+	echo "<pre>Debug: ";
+	print_r( $orderby );
+	echo "</pre>";
+	$orderby = "wp_posts.post_title ASC";
+	return $orderby;
+}
+
+//hook the filter to the category link
+add_filter( 'posts_orderby' , 'catwalker_custom_cat_page' ); 
+
+/**
+ *
  * Append post/page attributes to the content
  *
  */
@@ -214,6 +233,9 @@ add_filter( 'the_content' , 'catwalker_post_attributes_func' );
  * Option: Choose a default taxonomy
  * Option: Append list of attributes to each post/page
  * Option: CSS class for appended list of attributes
+ * Option: Custom sort for term archives
+ * Option: Order by
+ * Option: Order
  * Option: Include a list of related posts
  * Option: Show related posts only for specific terms
  * Option: Show related posts for child-terms of specific terms
@@ -254,6 +276,22 @@ function catwalker_sanitize_css_class( $class ) {
 function catwalker_sanitize_commalist( $input ) {
 	$input = preg_replace( '/[^0-9,]/' , '' , $input);
 	return $input;
+}
+
+//validate orderby dropdown
+function catwalker_sanitize_orderby_dropdown( $orderby ) {
+	if ( ( $orderby != 'date' ) && ( $orderby != 'title' ) ) {
+		$orderby = 'date';
+	}
+	return $orderby;
+}
+
+//validate order dropdown
+function catwalker_sanitize_order_dropdown( $order ) {
+	if ( ( $order != 'desc' ) && ( $order != 'asc' ) ) {
+		$order = 'desc';
+	}
+	return $order;
 }
 
 /**
@@ -313,6 +351,49 @@ function catwalker_post_attributes_style() {
 	$value = get_option( 'catwalker_post_attributes_class' );
 	echo <<<EOF
 <input type='text' maxlength='40' name='catwalker_post_attributes_class' value='$value' /> Set this class to help style your attribute list to match your theme's tag and category lists. Mileage will vary!
+EOF;
+}
+
+//function to generate checkbox for custom archive sorting
+function catwalker_custom_archive_sort_option() {
+	$checked = '';
+	if ( get_option('catwalker_custom_archive_sort') == "true" ) {
+		$checked = ' checked="yes"';
+	}
+	echo <<<EOF
+<input type='checkbox' name='catwalker_custom_archive_sort' value='true'{$checked} /> Check the box to use a custom sorting principle for term archive pages
+EOF;
+}
+
+//function to generate dropdown for custom archive orderby
+function catwalker_custom_archive_orderby_dropdown() {
+	$title_selected = '';
+	$date_selected = ' selected="selected"';
+	if ( get_option('catwalker_custom_archive_orderby') == 'title' ) {
+		$title_selected = ' selected="selected"';
+		$date_selected = '';
+	}
+	echo <<<EOF
+<select name='catwalker_custom_archive_orderby'>
+<option name='date' value='date'$date_selected>Date</option>
+<option name='title' value='title'$title_selected>Title</option>
+<select> Choose whether to sort posts by date or title
+EOF;
+}
+
+//function to generate dropdown for custom archive order
+function catwalker_custom_archive_order_dropdown() {
+	$asc_selected = '';
+	$desc_selected = ' selected="selected"';
+	if ( get_option('catwalker_custom_archive_order') == 'asc' ) {
+		$asc_selected = ' selected="selected"';
+		$desc_selected = '';
+	}
+	echo <<<EOF
+<select name='catwalker_custom_archive_order'>
+<option name='desc' value='desc'$desc_selected>Descending order</option>
+<option name='asc' value='asc'$asc_selected>Ascending order</option>
+<select> Choose whether to sort posts in descending or ascending order
 EOF;
 }
 
@@ -396,6 +477,24 @@ function catwalker_menu() {
 		'writing' ,
 		'catwalker-options'
 	);
+	add_settings_field( 'catwalker_custom_archive_sort' ,
+		'Custom sort for archive pages' ,
+		'catwalker_custom_archive_sort_option' ,
+		'writing' ,
+		'catwalker-options'
+	);
+	add_settings_field( 'catwalker_custom_archive_orderby' ,
+		'Order posts by' ,
+		'catwalker_custom_archive_orderby_dropdown' ,
+		'writing' ,
+		'catwalker-options'
+	);
+	add_settings_field( 'catwalker_custom_archive_order' ,
+		'Descending or Ascending' ,
+		'catwalker_custom_archive_order_dropdown' ,
+		'writing' ,
+		'catwalker-options'
+	);
 	add_settings_field( 'catwalker_related' ,
 		'Include list of related items' ,
 		'catwalker_related_option' ,
@@ -432,6 +531,9 @@ function catwalker_menu() {
 	register_setting( 'writing' , 'catwalker_default_taxonomy' , 'catwalker_sanitize_default_taxonomy' );
 	register_setting( 'writing' , 'catwalker_post_attributes' , 'catwalker_sanitize_checkbox' );
 	register_setting( 'writing' , 'catwalker_post_attributes_class' , 'catwalker_sanitize_css_class' );
+	register_setting( 'writing' , 'catwalker_custom_archive_sort' , 'catwalker_sanitize_checkbox' );
+	register_setting( 'writing' , 'catwalker_custom_archive_orderby' , 'catwalker_sanitize_orderby_dropdown' );
+	register_setting( 'writing' , 'catwalker_custom_archive_order' , 'catwalker_sanitize_order_dropdown' );
 	register_setting( 'writing' , 'catwalker_related' , 'catwalker_sanitize_checkbox' );
 	register_setting( 'writing' , 'catwalker_related_include_ids' , 'catwalker_sanitize_commalist' );
 	register_setting( 'writing' , 'catwalker_related_include_children' , 'catwalker_sanitize_commalist' );
