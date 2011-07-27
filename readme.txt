@@ -117,6 +117,10 @@ No.
 
 == Upgrade Notice ==
 
+= 1.1 =
+
+Important bugfix!
+
 = 1.0 =
 
 Ready for a version bump, not so much because of any major change, but more because of the cumulative improvements over the last several versions. This latest release includes more options for the automated related-posts lists as well as sorting options for Category archive pages.
@@ -134,6 +138,10 @@ List on a page or post all the pages or posts belonging to a particular category
 Set the preference to use or not use the custom "Attributes" taxonomy on the Writing Settings page.
 
 == Changelog ==
+
+= 1.1 =
+
+Fixes a bug that caused the custom archive order to fail on some set-ups.
 
 = 1.0 =
 1. Introduces an option to exclude certain terms from the automated related-posts lists that can be added to the end of each item.
