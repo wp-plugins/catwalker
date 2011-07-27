@@ -3,7 +3,7 @@ Contributors: kwiliarty
 Donate link: none
 Tags: categories, intersections, widgets, custom taxonomies
 Requires at least: 3.1
-Tested up to: 3.1.3
+Tested up to: 3.2.1
 Stable tag: 0.9
 
 List categories or cross-categorizations in page or post contents. Let users search for the intersection of two categories.
@@ -18,8 +18,9 @@ The catWalker plugin lets you do more with WordPress categories. The plugin has 
 1. List the posts or pages from a given category on a page or post
 1. Automatically list at the bottom of each post the categories which have been assigned to that post
 1. Automatically list at the bottom of each post other posts in the same category
+1. Customize the ordering preferences on category archive pages
 
-In addition, users can opt to use a hierarchical custom taxonomy (called "Attributes") that applies to Pages as well as Posts. If you use the Attributes taxonomy, all of the above options can be used on pages as well as posts.  
+In addition, users can opt to use a hierarchical custom taxonomy (called "Attributes") that applies to Pages as well as Posts. If you use the Attributes taxonomy, most of the above options can be used on pages as well as posts.  
 
 = List categories =
 
@@ -83,6 +84,10 @@ If you are using the custom Attributes taxonomy, you may want to include a list 
 
 You can automatically add a list of related posts or pages to the end of every post or page by checking the appropriate box on the Settings > Writing page. You can designate specific categories or attributes to be included, you can specify categories or attributes whose child-terms will be included, or you can leave those inputs blank to list related posts for all terms. In a similar way, you can list terms for which to include no related-posts lists. The automated related-posts listing will operate only on your CatWalker default taxonomy. 
 
+= Custom order on Category Pages =
+
+(Currently available only for Categories and not for the custom Attributes taxonomy.) Go to the "Catwalker Options" section of the "Settings > Writing" page. Check the box to use a custom ordering and choose your preferences from the drop-down menus. You can sort by date or title, ascending or descending.
+
 == Installation ==
 
 To install this plugin manually:
@@ -114,7 +119,7 @@ No.
 
 = 1.0 =
 
-Ready for a version bump, not so much because of any major change, but more because of the cumulative improvements over the last several versions. This latest release includes more options for the automated related-posts lists.
+Ready for a version bump, not so much because of any major change, but more because of the cumulative improvements over the last several versions. This latest release includes more options for the automated related-posts lists as well as sorting options for Category archive pages.
 
 = 0.9 =
 This version lets you automatically add lists of related posts to each entry. More configuration options for this feature to follow.
@@ -133,6 +138,7 @@ Set the preference to use or not use the custom "Attributes" taxonomy on the Wri
 = 1.0 =
 1. Introduces an option to exclude certain terms from the automated related-posts lists that can be added to the end of each item.
 1. Option to exclude child-terms of a given term from related-posts lists
+1. Options to sort Category Archives according to date or title, ascending or descending
 
 = 0.9 =
 Introduces option to include a list of related posts or pages at the end of each entry. Settings for this option will limit the functionality to specific categories or attributes, or to child-terms of specific categories or attributes. More configuration options will follow.
