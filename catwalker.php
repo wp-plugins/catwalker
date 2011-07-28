@@ -4,7 +4,7 @@ Plugin Name: catWalker
 Plugin URI: http://wordpress.blogs.wesleyan.edu/plugins/catwalker/
 Description: List categories, cross-categorizations or category posts in page or 
 post contents. Let users search for the intersection of two categories. 
-Version: 1.2
+Version: 1.2.1
 Author: Kevin Wiliarty
 Author URI: http://kwiliarty.blogs.wesleyan.edu/
 */
@@ -204,7 +204,7 @@ if ( get_option( 'catwalker_custom_archive_sort' ) == 'true' ) {
 //function to limit the number of posts on a category archive page
 function catwalker_set_custom_archive_limit( $limit ) {
 
-	if ( get_option( 'catwalker_custom_archive_limit' ) && ( is_category() ) ) {
+	if ( get_option( 'catwalker_custom_archive_limit' ) && ( is_category() ) && ( !( in_the_loop() ) ) ) {
 		$setting = get_option( 'catwalker_custom_archive_limit' );
 		$limit = "LIMIT 0,${setting}";
 	}

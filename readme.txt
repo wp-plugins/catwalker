@@ -117,6 +117,10 @@ No.
 
 == Upgrade Notice ==
 
+= 1.2.1 =
+
+A small but important tweak so that custom archive limits do not apply to in-post listings of related posts.
+
 = 1.2 =
 
 New feature: Custom post limit for category archive pages
@@ -142,6 +146,10 @@ List on a page or post all the pages or posts belonging to a particular category
 Set the preference to use or not use the custom "Attributes" taxonomy on the Writing Settings page.
 
 == Changelog ==
+
+= 1.2.1 =
+
+A small but important tweak so that custom archive limits do not apply to in-post listings of related posts.
 
 = 1.2 =
 
