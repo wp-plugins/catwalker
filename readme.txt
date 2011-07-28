@@ -18,7 +18,7 @@ The catWalker plugin lets you do more with WordPress categories. The plugin has 
 1. List the posts or pages from a given category on a page or post
 1. Automatically list at the bottom of each post the categories which have been assigned to that post
 1. Automatically list at the bottom of each post other posts in the same category
-1. Customize the ordering preferences on category archive pages
+1. Customize the ordering preferences and number of posts on category archive pages
 
 In addition, users can opt to use a hierarchical custom taxonomy (called "Attributes") that applies to Pages as well as Posts. If you use the Attributes taxonomy, most of the above options can be used on pages as well as posts.  
 
@@ -84,9 +84,9 @@ If you are using the custom Attributes taxonomy, you may want to include a list 
 
 You can automatically add a list of related posts or pages to the end of every post or page by checking the appropriate box on the Settings > Writing page. You can designate specific categories or attributes to be included, you can specify categories or attributes whose child-terms will be included, or you can leave those inputs blank to list related posts for all terms. In a similar way, you can list terms for which to include no related-posts lists. The automated related-posts listing will operate only on your CatWalker default taxonomy. 
 
-= Custom order on Category Pages =
+= Custom order and limit on Category Pages =
 
-(Currently available only for Categories and not for the custom Attributes taxonomy.) Go to the "Catwalker Options" section of the "Settings > Writing" page. Check the box to use a custom ordering and choose your preferences from the drop-down menus. You can sort by date or title, ascending or descending.
+(Currently available only for Categories and not for the custom Attributes taxonomy.) Go to the "Catwalker Options" section of the "Settings > Writing" page. Check the box to use a custom ordering and choose your preferences from the drop-down menus. You can sort by date or title, ascending or descending. You can also choose a custom number of posts to display on category archive pages.
 
 == Installation ==
 
@@ -117,6 +117,10 @@ No.
 
 == Upgrade Notice ==
 
+= 1.2 =
+
+New feature: Custom post limit for category archive pages
+
 = 1.1 =
 
 Important bugfix!
@@ -138,6 +142,10 @@ List on a page or post all the pages or posts belonging to a particular category
 Set the preference to use or not use the custom "Attributes" taxonomy on the Writing Settings page.
 
 == Changelog ==
+
+= 1.2 =
+
+Adds an option to set a custom number of posts on category archive pages.
 
 = 1.1 =
 
