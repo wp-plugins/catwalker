@@ -4,7 +4,7 @@ Plugin Name: catWalker
 Plugin URI: http://wordpress.blogs.wesleyan.edu/plugins/catwalker/
 Description: List categories, cross-categorizations or category posts in page or 
 post contents. Let users search for the intersection of two categories. 
-Version: 1.1
+Version: 1.2
 Author: Kevin Wiliarty
 Author URI: http://kwiliarty.blogs.wesleyan.edu/
 */
@@ -172,7 +172,7 @@ add_filter( 'the_content' , 'catwalker_list_related' );
 
 /**
  *
- * Filter category links to point to a flagship post
+ * Sort preferences for Category archive pages
  *
  */
 
@@ -190,10 +190,29 @@ function catwalker_custom_archive_sorter( $orderclause ) {
 	return $orderclause;
 }
 
-//hook the filter to the category link
+//hook the filter
 if ( get_option( 'catwalker_custom_archive_sort' ) == 'true' ) {
 	add_filter( 'posts_orderby' , 'catwalker_custom_archive_sorter' ); 
 }
+
+/**
+ *
+ * Limit preference for Category archive pages
+ *
+ */
+
+//function to limit the number of posts on a category archive page
+function catwalker_set_custom_archive_limit( $limit ) {
+
+	if ( get_option( 'catwalker_custom_archive_limit' ) && ( is_category() ) ) {
+		$setting = get_option( 'catwalker_custom_archive_limit' );
+		$limit = "LIMIT 0,${setting}";
+	}
+	return $limit;
+}
+
+//hook the filter
+add_filter( 'post_limits' , 'catwalker_set_custom_archive_limit' );
 
 /**
  *
@@ -242,6 +261,7 @@ add_filter( 'the_content' , 'catwalker_post_attributes_func' );
  * Option: Custom sort for term archives
  * Option: Order by
  * Option: Order
+ * Option: Limit number of posts on category archive pages
  * Option: Include a list of related posts
  * Option: Show related posts only for specific terms
  * Option: Show related posts for child-terms of specific terms
@@ -281,6 +301,12 @@ function catwalker_sanitize_css_class( $class ) {
 //validate a comma-separated list of numbers
 function catwalker_sanitize_commalist( $input ) {
 	$input = preg_replace( '/[^0-9,]/' , '' , $input);
+	return $input;
+}
+
+//validate a number
+function catwalker_sanitize_number( $input ) {
+	$input = preg_replace( '/[^0-9]/' , '' , $input);
 	return $input;
 }
 
@@ -403,6 +429,14 @@ function catwalker_custom_archive_order_dropdown() {
 EOF;
 }
 
+//function to create textbox for number of posts on category archive pages
+function catwalker_custom_archive_limit_box() {
+	$value = get_option( 'catwalker_custom_archive_limit' );
+	echo <<<EOF
+<input type='text' maxlength='5' name='catwalker_custom_archive_limit' value='$value' /> Set a custom number of posts to list on category archive pages. Leave blank to use the default for your site.
+EOF;
+}
+
 //function to generate checkbox for including list of related posts/pages
 function catwalker_related_option() {
 	$checked = '';
@@ -501,6 +535,12 @@ function catwalker_menu() {
 		'writing' ,
 		'catwalker-options'
 	);
+	add_settings_field( 'catwalker_custom_archive_limit' ,
+		'Number of posts' ,
+		'catwalker_custom_archive_limit_box' ,
+		'writing' ,
+		'catwalker-options'
+	);
 	add_settings_field( 'catwalker_related' ,
 		'Include list of related items' ,
 		'catwalker_related_option' ,
@@ -540,6 +580,7 @@ function catwalker_menu() {
 	register_setting( 'writing' , 'catwalker_custom_archive_sort' , 'catwalker_sanitize_checkbox' );
 	register_setting( 'writing' , 'catwalker_custom_archive_orderby' , 'catwalker_sanitize_orderby_dropdown' );
 	register_setting( 'writing' , 'catwalker_custom_archive_order' , 'catwalker_sanitize_order_dropdown' );
+	register_setting( 'writing' , 'catwalker_custom_archive_limit' , 'catwalker_sanitize_number' );
 	register_setting( 'writing' , 'catwalker_related' , 'catwalker_sanitize_checkbox' );
 	register_setting( 'writing' , 'catwalker_related_include_ids' , 'catwalker_sanitize_commalist' );
 	register_setting( 'writing' , 'catwalker_related_include_children' , 'catwalker_sanitize_commalist' );
