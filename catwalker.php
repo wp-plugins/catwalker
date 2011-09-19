@@ -4,7 +4,7 @@ Plugin Name: catWalker
 Plugin URI: http://wordpress.blogs.wesleyan.edu/plugins/catwalker/
 Description: List categories, cross-categorizations or category posts in page or 
 post contents. Let users search for the intersection of two categories. 
-Version: 1.2.1
+Version: 1.2.2
 Author: Kevin Wiliarty
 Author URI: http://kwiliarty.blogs.wesleyan.edu/
 */
@@ -748,7 +748,6 @@ function catwalker( $atts ) {
 		'current_category'   => $current_category,
 		'pad_counts'         => $pat_counts,
 		'taxonomy'           => $taxonomy,
-		'walker'             => 'Walker_Category',
 	);
 
 
