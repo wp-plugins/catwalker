@@ -117,6 +117,10 @@ No.
 
 == Upgrade Notice ==
 
+= 1.2.3 =
+
+Minor bugfix. 
+
 = 1.2.2 =
 
 Bugfix for the 'categories' shortcode.
@@ -150,6 +154,10 @@ List on a page or post all the pages or posts belonging to a particular category
 Set the preference to use or not use the custom "Attributes" taxonomy on the Writing Settings page.
 
 == Changelog ==
+
+= 1.2.3 =
+
+Fixes bug that could limit the number of posts from a given category displayed on administrative side.
 
 = 1.2.2 =
 
