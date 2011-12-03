@@ -117,6 +117,10 @@ No.
 
 == Upgrade Notice ==
 
+= 1.3 =
+
+Major bugfix for CrossCat widget
+
 = 1.2.3 =
 
 Minor bugfix. 
@@ -154,6 +158,10 @@ List on a page or post all the pages or posts belonging to a particular category
 Set the preference to use or not use the custom "Attributes" taxonomy on the Writing Settings page.
 
 == Changelog ==
+
+= 1.3 = 
+
+Introduces a major bugfix for the crosscat widget. The widget now first attempts to redirect to a pretty URL if permalinks are in use. If permalinks are not in use, the widget runs a custom query to display the requested posts. There is a lot of variability and complication in the use of URL's, rewrites, and queries. There may well be some further niceties to sort out, but I hope this is a good start to fix a piece that was pretty broken.
 
 = 1.2.3 =
 

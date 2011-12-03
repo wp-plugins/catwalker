@@ -4,7 +4,7 @@ Plugin Name: catWalker
 Plugin URI: http://wordpress.blogs.wesleyan.edu/plugins/catwalker/
 Description: List categories, cross-categorizations or category posts in page or 
 post contents. Let users search for the intersection of two categories. 
-Version: 1.2.3
+Version: 1.3
 Author: Kevin Wiliarty
 Author URI: http://kwiliarty.blogs.wesleyan.edu/
 */
@@ -603,7 +603,11 @@ add_action( 'admin_init' , 'catwalker_menu' );
 function cc_form() {
 
 	// If the query "type" is "crosscat"
-	if ( esc_html( $_GET['type'] == 'crosscat' ) ) {
+	if ( esc_html( $_GET['type'] == 'crosscat' ) && !(in_the_loop()) ) {
+
+		//grab some global variables 
+		global $wp_rewrite;
+		global $wp_query;
 
 		// get the URL for the site
 		$url = get_bloginfo('url');
@@ -613,7 +617,7 @@ function cc_form() {
 		$cat1id = esc_html( $_GET['cat1'] );
 		$cat2id = esc_html( $_GET['cat2'] );
 		// get the taxonomy from the query string
-		$taxonomy = esc_html( $_GET['tax1'] );
+		$taxonomy = esc_html( $_GET['tax'] );
 		// get the slugs corresponding to the id's
 		$cat1 = get_term_by( 'id' , $cat1id , $taxonomy );
 		if ( $cat1 != '' ) {
@@ -631,15 +635,31 @@ function cc_form() {
 		// this is the primary way to make the dropdowns persist
 		setcookie( 'crosscat-cat1' , $cat1id );
 		setcookie( 'crosscat-cat2' , $cat2id );
-		// build the new URL and redirect to it
-		$crosscat_url = "{$url}/?{$taxonomy}={$cat1slug}{$plus}{$cat2slug}";
-		wp_redirect($crosscat_url);
-		exit;
+
+		//if permalinks are being used
+		if ( $wp_rewrite->using_permalinks() ) {
+			if ( $taxonomy == 'category' ) {
+				$permastruct = $wp_rewrite->get_category_permastruct();
+			}
+			else {
+				$permastruct = $wp_rewrite->get_extra_permastruct('attribute');
+			}
+			$request = preg_replace( ':%[^%]*%:' , "{$cat1slug}{$plus}{$cat2slug}" , $permastruct );
+			$crosscat_url = "{$url}{$request}";
+			wp_redirect( $crosscat_url );
+			exit;
+		}
+
+		//or if permalinks are not in use
+		else {
+			$ccat_query = new crosscat_query( $cat1id , $cat2id , $taxonomy );
+			$wp_query->query_vars['tax_query'] = $ccat_query->cc_query['tax_query'];
+		}
 	}
 }
 
 // add the action hook for the redirect
-add_action( 'wp_loaded' , 'cc_form' );
+add_action( 'pre_get_posts' , 'cc_form' );
 
 /**
  * Catwalker Styles
@@ -975,10 +995,8 @@ class crossCategorizerWidget extends WP_Widget
 		$url = get_bloginfo('url');
 		$catwalker_action = $url;
 		echo "<form class='crosscat-form' action='{$catwalker_action}' method='get'>\n";
-		echo "<input type='hidden' name='url' value='{$url}' />\n";
 		echo "<input type='hidden' name='type' value='crosscat' />\n";
-		echo "<input type='hidden' name='tax1' value='{$taxonomy1}' />\n";
-		echo "<input type='hidden' name='tax2' value='{$taxonomy2}' />\n";
+		echo "<input type='hidden' name='tax' value='{$taxonomy1}' />\n";
 		echo "<div id='dd1-label'>{$instance['label1']}:</div>\n";
 		$dropdownOne = wp_dropdown_categories( $dropdownOneArgs );
 		echo "<div id='dd2-label'>{$instance['label2']}:</div>\n";
