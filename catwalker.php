@@ -954,6 +954,12 @@ class crossCategorizerWidget extends WP_Widget
 			$cat2_id = $cat2->term_id;
 		}
 		$option_all = 'All categories';
+		$dd_hide_empty = empty($instance['dd_hide_empty']) ? '1' : $instance['dd_hide_empty'];
+		echo "<pre>Debug: ";
+		print_r($dd_hide_empty);
+		print_r($instance);
+		echo "</pre>";
+		die();
 		$child_of1 = empty($instance['child_of1']) ? '0' : $instance['child_of1'];
 		$child_of2 = empty($instance['child_of2']) ? '0' : $instance['child_of2'];
 		$taxonomy1 = empty($instance['taxonomy1']) ? get_option('catwalker_default_taxonomy') : $instance['taxonomy1'];
@@ -962,7 +968,7 @@ class crossCategorizerWidget extends WP_Widget
 			'id'               => 'crosscat-dd1',
 			'name'             => 'cat1',
 			'hierarchical'     => 1,
-			'hide_empty'       => 0 ,
+			'hide_empty'       => $dd_hide_empty,
 			'orderby'          => 'name',
 			'order'            => 'ASC',
 			'selected'         => $cat1_id,
@@ -974,7 +980,7 @@ class crossCategorizerWidget extends WP_Widget
 			'id'               => 'crosscat-dd2',
 			'name'             => 'cat2',
 			'hierarchical'     => 1,
-			'hide_empty'       => 0 ,
+			'hide_empty'       => $dd_hide_empty,
 			'orderby'          => 'name',
 			'order'            => 'ASC',
 			'selected'         => $cat2_id,
@@ -1023,6 +1029,7 @@ class crossCategorizerWidget extends WP_Widget
 		$instance['child_of2'] = $new_instance['child_of2'];
 		$instance['taxonomy1'] = $new_instance['taxonomy1'];
 		$instance['taxonomy2'] = $new_instance['taxonomy2'];
+		$instance['dd_hide_empty'] = $new_instance['dd_hide_empty'];
 
 		return $instance;
 	}
@@ -1035,6 +1042,7 @@ class crossCategorizerWidget extends WP_Widget
 		//Defaults
 		$instance = wp_parse_args( (array) $instance, array(
 			'title'        => '', 
+			'dd_hide_empty' => '1',
 			'label1'       => 'Select a category', 
 			'child_of1'    => '0' , 
 			'label2'       => 'Select another',
@@ -1055,9 +1063,12 @@ class crossCategorizerWidget extends WP_Widget
 		$category2_label = __('Category 2: ');
 		$label_label = __('Label: ');
 		$child_of_label = __('Child of: ');
+		$dd_hide_empty_label = __('Hide empty categories: ');
 
 
 		$title = htmlspecialchars($instance['title']);
+		$dd_hide_empty = ( $instance['dd_hide_empty'] == '1' ) ? '1' : '0' ;
+		$dd_hide_empty_checked = ( $dd_hide_empty == 1 ) ? ' checked="checked"' : '';
 		$label1 = htmlspecialchars($instance['label1']);
 		$child_of1 = $instance['child_of1'];
 		$label2 = htmlspecialchars($instance['label2']);
@@ -1074,7 +1085,7 @@ class crossCategorizerWidget extends WP_Widget
 			'name'            => $this->get_field_name('child_of1') ,
 			'echo'            => false,
 			'hierarchical'    => 1 , 
-			'hide_empty'      => 0 ,
+			'hide_empty'      => $dd_hide_empty ,
 			'selected'        => $child_of1 ,
 			'show_option_all' => 'All categories' ,
 			'taxonomy'        => $taxonomy1,
@@ -1085,7 +1096,7 @@ class crossCategorizerWidget extends WP_Widget
 			'name'            => $this->get_field_name('child_of2') ,
 			'echo'            => false,
 			'hierarchical'    => 1 , 
-			'hide_empty'      => 0 ,
+			'hide_empty'      => $dd_hide_empty ,
 			'selected'        => $child_of2 ,
 			'show_option_all' => 'All categories' ,
 			'taxonomy'        => $taxonomy1,
@@ -1100,6 +1111,12 @@ class crossCategorizerWidget extends WP_Widget
 <div>
 <label for="{$this->get_field_id('title')}">{$title_label}</label> 
 <input id="{$this->get_field_id('title')}" name="{$this->get_field_name('title')}" type="text" value="{$title}" />
+</div>
+
+<div>
+<input type="hidden" name="{$this->get_field_name('dd_hide_empty')}" value="0" />
+<label for="{$this->get_field_id('dd_hide_empty')}">{$dd_hide_empty_label}</label>
+<input id="{$this->get_field_id('dd_hide_empty')}" name="{$this->get_field_name('dd_hide_empty')}" type="checkbox" value="1"{$dd_hide_empty_checked} />
 </div>
 
 <div>
