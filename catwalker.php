@@ -4,7 +4,7 @@ Plugin Name: catWalker
 Plugin URI: http://wordpress.blogs.wesleyan.edu/plugins/catwalker/
 Description: List categories, cross-categorizations or category posts in page or 
 post contents. Let users search for the intersection of two categories. 
-Version: 1.3
+Version: 1.3.1
 Author: Kevin Wiliarty
 Author URI: http://kwiliarty.blogs.wesleyan.edu/
 */
@@ -962,6 +962,7 @@ class crossCategorizerWidget extends WP_Widget
 			'id'               => 'crosscat-dd1',
 			'name'             => 'cat1',
 			'hierarchical'     => 1,
+			'hide_empty'       => 0 ,
 			'orderby'          => 'name',
 			'order'            => 'ASC',
 			'selected'         => $cat1_id,
@@ -973,6 +974,7 @@ class crossCategorizerWidget extends WP_Widget
 			'id'               => 'crosscat-dd2',
 			'name'             => 'cat2',
 			'hierarchical'     => 1,
+			'hide_empty'       => 0 ,
 			'orderby'          => 'name',
 			'order'            => 'ASC',
 			'selected'         => $cat2_id,
@@ -1072,6 +1074,7 @@ class crossCategorizerWidget extends WP_Widget
 			'name'            => $this->get_field_name('child_of1') ,
 			'echo'            => false,
 			'hierarchical'    => 1 , 
+			'hide_empty'      => 0 ,
 			'selected'        => $child_of1 ,
 			'show_option_all' => 'All categories' ,
 			'taxonomy'        => $taxonomy1,
@@ -1082,6 +1085,7 @@ class crossCategorizerWidget extends WP_Widget
 			'name'            => $this->get_field_name('child_of2') ,
 			'echo'            => false,
 			'hierarchical'    => 1 , 
+			'hide_empty'      => 0 ,
 			'selected'        => $child_of2 ,
 			'show_option_all' => 'All categories' ,
 			'taxonomy'        => $taxonomy1,
