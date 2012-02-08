@@ -1036,18 +1036,18 @@ class crossCategorizerWidget extends WP_Widget
 	function form($instance){
 		//Defaults
 		$instance = wp_parse_args( (array) $instance, array(
-			'title'        => '', 
+			'title'         => '', 
 			'dd_hide_empty' => '1',
-			'label1'       => 'Select a category', 
-			'child_of1'    => '0' , 
-			'label2'       => 'Select another',
-			'child_of2'    => '0' , 
-			'taxonomy1'    => get_option('catwalker_default_taxonomy'),
-			'cat1selected' => 'selected',
-			'att1selected' => '',
-			'taxonomy2'    => get_option('catwalker_default_taxonomy'),
-			'cat2selected' => 'selected',
-			'att2selected' => '',
+			'label1'        => 'Select a category', 
+			'child_of1'     => '0' , 
+			'label2'        => 'Select another',
+			'child_of2'     => '0' , 
+			'taxonomy1'     => get_option('catwalker_default_taxonomy'),
+			'cat1selected'  => 'selected',
+			'att1selected'  => '',
+			'taxonomy2'     => get_option('catwalker_default_taxonomy'),
+			'cat2selected'  => 'selected',
+			'att2selected'  => '',
 			) 
 		);
 		
