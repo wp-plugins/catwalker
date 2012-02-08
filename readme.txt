@@ -3,8 +3,8 @@ Contributors: kwiliarty
 Donate link: none
 Tags: categories, intersections, widgets, custom taxonomies
 Requires at least: 3.1
-Tested up to: 3.2.1
-Stable tag: 1.3
+Tested up to: 3.3.1
+Stable tag: 1.3.1
 
 List categories or cross-categorizations in page or post contents. Let users search for the intersection of two categories.
 
@@ -47,6 +47,8 @@ Go to Settings > Writing to choose whether or not to use the custom "Attributes"
 On display pages, the Cross Categorizer widget includes two configurable dropdown lists of categories. Choose two categories, then click "Search" to view the posts or pages that belong to both.
 
 On the admin side you can configure the widget to show different category branches in each dropdown.
+
+As of version 1.3.1 you can also opt to list empty categories. Previously empty categories were not listed, and that is still the default behavior.
 
 = Cross Categorizer shortcode =
 
@@ -117,6 +119,10 @@ No.
 
 == Upgrade Notice ==
 
+= 1.3.1 +
+
+Minor feature improvement. The widget can now optionally display empty along with the rest in both the public and admin interfaces. 
+
 = 1.3 =
 
 Major bugfix for CrossCat widget
@@ -158,6 +164,10 @@ List on a page or post all the pages or posts belonging to a particular category
 Set the preference to use or not use the custom "Attributes" taxonomy on the Writing Settings page.
 
 == Changelog ==
+
+= 1.3.1 =
+
+This version introduces a minor enhancement so that users have an option to set whether the widget dropdown includes empty categories alongside non-empty categories. You can set the preference in the widget itself on the admin side.
 
 = 1.3 = 
 
