@@ -954,12 +954,7 @@ class crossCategorizerWidget extends WP_Widget
 			$cat2_id = $cat2->term_id;
 		}
 		$option_all = 'All categories';
-		$dd_hide_empty = empty($instance['dd_hide_empty']) ? '1' : $instance['dd_hide_empty'];
-		echo "<pre>Debug: ";
-		print_r($dd_hide_empty);
-		print_r($instance);
-		echo "</pre>";
-		die();
+		$dd_hide_empty = ( $instance['dd_hide_empty'] != 0 ) ? '1' : $instance['dd_hide_empty'];
 		$child_of1 = empty($instance['child_of1']) ? '0' : $instance['child_of1'];
 		$child_of2 = empty($instance['child_of2']) ? '0' : $instance['child_of2'];
 		$taxonomy1 = empty($instance['taxonomy1']) ? get_option('catwalker_default_taxonomy') : $instance['taxonomy1'];
