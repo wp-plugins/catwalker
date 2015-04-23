@@ -3,7 +3,7 @@ Contributors: kwiliarty
 Donate link: none
 Tags: categories, intersections, widgets, custom taxonomies
 Requires at least: 3.1
-Tested up to: 4.0
+Tested up to: 4.2
 Stable tag: 1.3.1
 
 List categories or cross-categorizations in page or post contents. Let users search for the intersection of two categories.
